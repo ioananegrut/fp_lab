@@ -32,6 +32,8 @@ credentials = {
 authenticator = stauth.Authenticate(credentials,
                                      "dashboard", "abcdef", cookie_expiry_days=0)
 name, authentication_status, username = authenticator.login("Login", "main")
+
+
 if authentication_status == False:
     st.error("Username/password incorecte")
 if authentication_status == None:
@@ -41,9 +43,7 @@ if authentication_status:
     # Add a logout button
     authenticator.logout("Logout", "sidebar")
 
-    student_id = name
-
-    st.title("Laborator Fundamentele Programării - student {}".format(student_id))
+    st.title("Laborator Fundamentele Programării - student {}".format(name))
 
     # Query the database
     @st.cache_resource
@@ -61,7 +61,6 @@ if authentication_status:
     data = pd.DataFrame(rows.data)
 
     student_data = data[data["student_id"]==name]
-    # print(student_data)
 
     st.subheader("Evoluția notelor:")
     st.bar_chart(data=student_data, x ="lab", y = "nota")
@@ -85,4 +84,4 @@ if authentication_status:
 
     if st.button("Detalii prezență"):
         st.table(student_data[["lab", "prezenta"]].reset_index(drop=True))
-    # print(attendance_summary)
+
