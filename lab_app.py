@@ -55,7 +55,7 @@ if authentication_status:
     supabase = init_connection()
 
     def run_query():
-        return supabase.table("fp-lab").select("*").execute()
+        return supabase.table("fplab").select("*").execute()
 
     rows = run_query()
     data = pd.DataFrame(rows.data)
