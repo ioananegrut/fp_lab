@@ -6,11 +6,11 @@ from pathlib import Path
 import streamlit_authenticator as stauth
 
 ## Add student log-in
-names = ["a1", "a2", "a3"]
-usernames = ["a1", "a2", "a3"]
-file_path = Path(__file__).parent / "hashed_pw.pkl"
-with file_path.open("rb") as file:
-    passwords = pickle.load(file)
+# names = ["a1", "a2", "a3"]
+# usernames = ["a1", "a2", "a3"]
+# file_path = Path(__file__).parent / "hashed_pw.pkl"
+# with file_path.open("rb") as file:
+#     passwords = pickle.load(file)
 
 # credentials=dict()
 # for (username, password) in zip(usernames, passwords):
