@@ -5,6 +5,7 @@ import pickle
 from pathlib import Path
 import streamlit_authenticator as stauth
 
+from supabase import create_client
 ## Add student log-in
 # names = ["a1", "a2", "a3"]
 # usernames = ["a1", "a2", "a3"]
@@ -39,15 +40,26 @@ if authentication_status == None:
 if authentication_status:
     # Add a logout button
     authenticator.logout("Logout", "sidebar")
-    # Import excel_file
-    data = pd.read_excel("../lab_summary.xlsx")
-    # print(data.head())
 
     student_id = name
 
     st.title("Laborator Fundamentele Programării - student {}".format(student_id))
 
     # Query the database
+    @st.cache_resource
+    def init_connection():
+        url = st.secrets["supabase_url"]
+        key = st.secrets["supabase_key"]
+        return create_client(url, key)
+
+    supabase = init_connection()
+
+    def run_query():
+        return supabase.table("fp-lab").select("*").execute()
+
+    rows = run_query()
+    data = pd.DataFrame(rows.data)
+
     student_data = data[data["student_id"]==name]
     # print(student_data)
 
