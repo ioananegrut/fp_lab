@@ -21,16 +21,16 @@ credentials_rows = run_user_query()
 credentials_df = pd.DataFrame(credentials_rows.data)
 
 ## Format the credentials as required
-config={"credentials":{"usernames":{}}}
-for index, row in credentials_df.iterrows():
-    user_dict = {"name":row["name"],
-                 "password": [row["password"]]}
-    config["credentials"]["usernames"][row["username"]]=user_dict
-print(config)
+# config={"credentials":{"usernames":{}}}
+# for index, row in credentials_df.iterrows():
+#     user_dict = {"name":row["name"],
+#                  "password": [row["password"]]}
+#     config["credentials"]["usernames"][row["username"]]=user_dict
+# print(config)
 
-# names  = [n for n in credentials_df["name"]]
-# usernames  = [n for n in credentials_df["username"]]
-# passwords  = [n for n in credentials_df["password"]]
+config = {"credentials": {"usernames": {"a1": {"name": "anna",
+                                               "password": "abc"}}}}
+
 # AUTHENTICATE in the app
 authenticator = stauth.Authenticate(config["credentials"],
                                     "blabla", 
