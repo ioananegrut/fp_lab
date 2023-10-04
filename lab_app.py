@@ -15,19 +15,24 @@ supabase = init_connection()
 
 ## Get the encrypted user credentials from the DB
 def run_user_query():
+    print("getting credentials table from db")
     return supabase.table("credentials").select("*").execute()
 credentials_rows = run_user_query()
 credentials_df = pd.DataFrame(credentials_rows.data)
 
-## Format the creddentials as required
+## Format the credentials as required
 config={"credentials":{"usernames":{}}}
 for index, row in credentials_df.iterrows():
     user_dict = {"name":row["name"],
                  "password": [row["password"]]}
     config["credentials"]["usernames"][row["username"]]=user_dict
 print(config)
+
+names  = [n for n in credentials_df["name"]]
+usernames  = [n for n in credentials_df["username"]]
+passwords  = [n for n in credentials_df["password"]]
 # AUTHENTICATE in the app
-authenticator = stauth.Authenticate(config["credentials"],
+authenticator = stauth.Authenticate(names, usernames, passwords,
                                     "blabla", 
                                     "xx", 
                                     cookie_expiry_days=0)
