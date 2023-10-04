@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 
-import pickle
+# import pickle
+import yaml
+from yaml import SafeLoader
 from pathlib import Path
 import streamlit_authenticator as stauth
 
@@ -21,17 +23,16 @@ from supabase import create_client
 
 # print(credentials)
 # print(passwords)
+## USER CREDENTIALS
+with open("config.yaml") as f:
+    config = yaml.load(f, Loader=SafeLoader)
 
-credentials = {
-    "usernames": {"a1": {"name": "a1",
-                         "password":"$2b$12$Jc3dP1NPEE3tagjcwtNhNOsVbdWMA.k7uRtBVYkxwmrsNuQ6Xjswi"},
-                  "a2":{"name":"a2",
-                        "password":"$2b$12$te9QHMxSOgN0XbCPYD/5uOwSrG4lR4qmBqOP.Np0ROQEVx4pWb82."}}
-}
-
-authenticator = stauth.Authenticate(credentials,
-                                     "dashboard", "abcdef", cookie_expiry_days=0)
+authenticator = stauth.Authenticate(config["credentials"],
+                                    config["cookie"]["name"], 
+                                    config["cookie"["key"]], 
+                                    cookie_expiry_days=config["cookie"]["expiry_days"])
 name, authentication_status, username = authenticator.login("Login", "main")
+# print(name, authentication_status, username)
 
 
 if authentication_status == False:

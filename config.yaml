@@ -1,0 +1,14 @@
+cookie:
+  expiry_days: 0
+  key: blabla
+  name: xx
+credentials:
+  usernames:
+    a1:
+      name: anna
+      password:
+      - $2b$12$QVn.vLBkOS5ES7QGVA79YOy50lmOwYasTa0CYFx4yvRG//Ozhadxe
+    a2:
+      name: may
+      password:
+      - $2b$12$2hGkdxCj9BVaa8pfIJzbde4c12rWGomM28pFflIG6W7JNE5vjhsne
