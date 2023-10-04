@@ -21,7 +21,7 @@ credentials_df = pd.DataFrame(credentials_rows.data)
 
 ## Format the creddentials as required
 config={"credentials":[]}
-for row in credentials_df.iterrows():
+for index, row in credentials_df.iterrows():
     user_dict = {"password": row["password"],
                  "name":row["name"]}
     config["credentials"][row["usernames"]]=user_dict
