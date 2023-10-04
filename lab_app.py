@@ -24,7 +24,7 @@ config={"credentials":[]}
 for index, row in credentials_df.iterrows():
     user_dict = {"password": row["password"],
                  "name":row["name"]}
-    config["credentials"][row["usernames"]]=user_dict
+    config["credentials"][row["username"]]=user_dict
 
 # AUTHENTICATE in the app
 authenticator = stauth.Authenticate(config["credentials"],
