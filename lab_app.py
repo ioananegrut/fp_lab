@@ -8,6 +8,15 @@ from pathlib import Path
 import streamlit_authenticator as stauth
 
 from supabase import create_client
+
+# Query the database
+@st.cache_resource
+def init_connection():
+    url = st.secrets["supabase_url"]
+    key = st.secrets["supabase_key"]
+    return create_client(url, key)
+
+supabase = init_connection()
 ## Add student log-in
 # names = ["a1", "a2", "a3"]
 # usernames = ["a1", "a2", "a3"]
@@ -24,13 +33,24 @@ from supabase import create_client
 # print(credentials)
 # print(passwords)
 ## USER CREDENTIALS
-with open("config.yaml") as f:
-    config = yaml.load(f, Loader=SafeLoader)
+# with open("config.yaml") as f:
+#     config = yaml.load(f, Loader=SafeLoader)
+
+def run_user_query():
+    return supabase.table("credentials").select("*").execute()
+credentials_rows = run_user_query()
+credentials_df = pd.DataFrame(credentials_rows.data)
+
+config={"credentials":[]}
+for row in credentials_df.iterrows():
+    user_dict = {"password": row["password"],
+                 "name":row["name"]}
+    config["credentials"][row["usernames"]]=user_dict
 
 authenticator = stauth.Authenticate(config["credentials"],
-                                    config["cookie"]["name"], 
-                                    config["cookie"["key"]], 
-                                    cookie_expiry_days=config["cookie"]["expiry_days"])
+                                    "blabla", 
+                                    "xx", 
+                                    cookie_expiry_days=0)
 name, authentication_status, username = authenticator.login("Login", "main")
 # print(name, authentication_status, username)
 
@@ -45,15 +65,6 @@ if authentication_status:
     authenticator.logout("Logout", "sidebar")
 
     st.title("Laborator Fundamentele Programării - student {}".format(name))
-
-    # Query the database
-    @st.cache_resource
-    def init_connection():
-        url = st.secrets["supabase_url"]
-        key = st.secrets["supabase_key"]
-        return create_client(url, key)
-
-    supabase = init_connection()
 
     def run_query():
         return supabase.table("fplab").select("*").execute()
