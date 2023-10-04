@@ -5,22 +5,15 @@ from supabase import create_client
 import yaml
 from yaml import SafeLoader
 
-# Initialize database connection
-@st.cache_resource
-def init_connection():
-    url = st.secrets["supabase_url"]
-    key = st.secrets["supabase_key"]
-    return create_client(url, key)
 
-supabase = init_connection()
 ## Add student log-in
 
 ## Get the encrypted user credentials from the DB
-def run_user_query():
-    print("getting credentials table from db")
-    return supabase.table("credentials").select("*").execute()
-credentials_rows = run_user_query()
-credentials_df = pd.DataFrame(credentials_rows.data)
+# def run_user_query():
+#     print("getting credentials table from db")
+#     return supabase.table("credentials").select("*").execute()
+# credentials_rows = run_user_query()
+# credentials_df = pd.DataFrame(credentials_rows.data)
 
 ## Format the credentials as required
 # config={"credentials":{"usernames":{}}}
@@ -49,6 +42,15 @@ if authentication_status == None:
 if authentication_status:
     # Add a logout button
     authenticator.logout("Logout", "sidebar")
+
+    # Initialize database connection
+    @st.cache_resource
+    def init_connection():
+        url = st.secrets["supabase_url"]
+        key = st.secrets["supabase_key"]
+        return create_client(url, key)
+
+    supabase = init_connection()
 
     st.title("Laborator Fundamentele Programării - student {}".format(name))
 
