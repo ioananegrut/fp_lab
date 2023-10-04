@@ -28,11 +28,11 @@ for index, row in credentials_df.iterrows():
     config["credentials"]["usernames"][row["username"]]=user_dict
 print(config)
 
-names  = [n for n in credentials_df["name"]]
-usernames  = [n for n in credentials_df["username"]]
-passwords  = [n for n in credentials_df["password"]]
+# names  = [n for n in credentials_df["name"]]
+# usernames  = [n for n in credentials_df["username"]]
+# passwords  = [n for n in credentials_df["password"]]
 # AUTHENTICATE in the app
-authenticator = stauth.Authenticate(names, usernames, passwords,
+authenticator = stauth.Authenticate(config["usernames"],
                                     "blabla", 
                                     "xx", 
                                     cookie_expiry_days=0)
