@@ -1,15 +1,9 @@
 import streamlit as st
 import pandas as pd
-
-# import pickle
-import yaml
-from yaml import SafeLoader
-from pathlib import Path
 import streamlit_authenticator as stauth
-
 from supabase import create_client
 
-# Query the database
+# Initialize database connection
 @st.cache_resource
 def init_connection():
     url = st.secrets["supabase_url"]
@@ -18,42 +12,26 @@ def init_connection():
 
 supabase = init_connection()
 ## Add student log-in
-# names = ["a1", "a2", "a3"]
-# usernames = ["a1", "a2", "a3"]
-# file_path = Path(__file__).parent / "hashed_pw.pkl"
-# with file_path.open("rb") as file:
-#     passwords = pickle.load(file)
 
-# credentials=dict()
-# for (username, password) in zip(usernames, passwords):
-#     print(username)
-#     print(password)
-    # credentials["usernames"].append(username)
-
-# print(credentials)
-# print(passwords)
-## USER CREDENTIALS
-# with open("config.yaml") as f:
-#     config = yaml.load(f, Loader=SafeLoader)
-
+## Get the encrypted user credentials from the DB
 def run_user_query():
     return supabase.table("credentials").select("*").execute()
 credentials_rows = run_user_query()
 credentials_df = pd.DataFrame(credentials_rows.data)
 
+## Format the creddentials as required
 config={"credentials":[]}
 for row in credentials_df.iterrows():
     user_dict = {"password": row["password"],
                  "name":row["name"]}
     config["credentials"][row["usernames"]]=user_dict
 
+# AUTHENTICATE in the app
 authenticator = stauth.Authenticate(config["credentials"],
                                     "blabla", 
                                     "xx", 
                                     cookie_expiry_days=0)
 name, authentication_status, username = authenticator.login("Login", "main")
-# print(name, authentication_status, username)
-
 
 if authentication_status == False:
     st.error("Username/password incorecte")
@@ -66,14 +44,14 @@ if authentication_status:
 
     st.title("Laborator Fundamentele Programării - student {}".format(name))
 
+    # Fetch the student data from the database
     def run_query():
         return supabase.table("fplab").select("*").execute()
-
     rows = run_query()
     data = pd.DataFrame(rows.data)
-
     student_data = data[data["student_id"]==name]
 
+    # Display the data 
     st.subheader("Evoluția notelor:")
     st.bar_chart(data=student_data, x ="lab", y = "nota")
 
@@ -96,4 +74,3 @@ if authentication_status:
 
     if st.button("Detalii prezență"):
         st.table(student_data[["lab", "prezenta"]].reset_index(drop=True))
-
