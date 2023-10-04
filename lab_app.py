@@ -32,7 +32,7 @@ print(config)
 # usernames  = [n for n in credentials_df["username"]]
 # passwords  = [n for n in credentials_df["password"]]
 # AUTHENTICATE in the app
-authenticator = stauth.Authenticate(config["usernames"],
+authenticator = stauth.Authenticate(config["credentials"]["usernames"],
                                     "blabla", 
                                     "xx", 
                                     cookie_expiry_days=0)
