@@ -3,6 +3,8 @@ import pandas as pd
 import streamlit_authenticator as stauth
 from supabase import create_client
 import yaml
+from yaml import SafeLoader
+
 # Initialize database connection
 @st.cache_resource
 def init_connection():
@@ -31,8 +33,9 @@ credentials_df = pd.DataFrame(credentials_rows.data)
 config = {"credentials": {"usernames": {"a1": {"name": "anna",
                                                "password": "abc"}}}}
 config_s = yaml.dump(config)
+config_ss = yaml.load(config_s, Loader=SafeLoader)
 # AUTHENTICATE in the app
-authenticator = stauth.Authenticate(config_s["credentials"],
+authenticator = stauth.Authenticate(config_ss["credentials"],
                                     "blabla", 
                                     "xx", 
                                     cookie_expiry_days=0)
